@@ -15,7 +15,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Role } from '../enums/role.enums';
 import { Roles } from '../decorators/role.decorator';
 import { RoleGuard } from '../guards/role.guard';
-import { AuthGuard } from "../guards/auth.guard";
+import { AuthGuard } from '../guards/auth.guard';
 
 @ApiTags('users')
 @Controller('users')
