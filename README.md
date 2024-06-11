@@ -9,10 +9,10 @@ As funcionalidades implementadas neste mpv, são:
 - Recuperação de senha
 - Criar, editar, listar e deletar listas de material para as disciplinas
 
-## Rodando o projeto
+## Banco de dados local
 
 - Para o banco de dados, faça o download do docker em sua máquina para poder rodar uma instância do mysql.
-- Feito use, rode o seguinte comando:
+- Feito isso, rode o seguinte comando:
 
 ```bash
 $ docker-compose up
