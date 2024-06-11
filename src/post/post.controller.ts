@@ -43,6 +43,12 @@ export class PostController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdatePostRequestDTO,
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [],
+      }),
+    )
+    pictures: Array<Express.Multer.File>,
   ) {
     return this.postService.update(id, body);
   }
