@@ -1,8 +1,10 @@
 import {
-  BadRequestException, HttpStatus,
-  Injectable, InternalServerErrorException,
-  UnauthorizedException
-} from "@nestjs/common";
+  BadRequestException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { AuthRegisterDTO } from './dto/auth-register.dto';
@@ -102,9 +104,13 @@ export class AuthService {
         message: 'E-mail enviado com senha temporária.',
       };
     } catch (e) {
-      throw new InternalServerErrorException(
-        'Não foi possível recuperar a senha: ' + e,
-      );
+      if (e instanceof UnauthorizedException) {
+        throw e;
+      } else {
+        throw new InternalServerErrorException(
+          'Não foi possível recuperar a senha: ' + e,
+        );
+      }
     }
   }
 
@@ -119,8 +125,12 @@ export class AuthService {
         throw new BadRequestException('Token inválido.');
       }
 
-      await this.userRepository.update(Number(data.id), {
+      const encrypted_password: string = await bcrypt.hash(
         password,
+        await bcrypt.genSalt(),
+      );
+      await this.userRepository.update(Number(data.id), {
+        password: encrypted_password,
       });
 
       const user = await this.userService.findOne(Number(data.id));

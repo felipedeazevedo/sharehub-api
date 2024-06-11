@@ -1,4 +1,9 @@
-import { IsEmail, IsPhoneNumber, IsString, IsStrongPassword } from "class-validator";
+import {
+  IsEmail,
+  IsPhoneNumber,
+  IsString,
+  IsStrongPassword,
+} from 'class-validator';
 import { Role } from '../../enums/role.enums';
 
 export class CreateUserRequestDTO {

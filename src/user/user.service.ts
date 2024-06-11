@@ -1,8 +1,9 @@
 import {
   ConflictException,
-  Injectable, InternalServerErrorException,
-  NotFoundException
-} from "@nestjs/common";
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserRequestDTO } from './dto/CreateUserRequestDTO';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from './user.repository';

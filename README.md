@@ -23,6 +23,12 @@ Lembre que as informações de conexão definidas no docker-compose.yml pracisam
 
 ## Rodando o projeto
 
+Instale as dependências necessárias:
+```bash
+$ npm install
+```
+
+Rodando o projeto:
 ```bash
 # development
 $ npm run start
@@ -30,6 +36,11 @@ $ npm run start
 # watch mode
 $ npm run start:dev
 ```
+
+## Swagger (OpenAPI)
+Esta API REST tem todos os seus endpoints documentados, passa acessar a documentação localmente use o seguinte endereço (Pode mudar de acordo
+com a porta da sua aplicação local):
+http://localhost:3000/api#/
 
 
 

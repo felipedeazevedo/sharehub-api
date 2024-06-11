@@ -1,4 +1,10 @@
-import { IsEmail, IsOptional, IsPhoneNumber, IsString, IsStrongPassword } from "class-validator";
+import {
+  IsEmail,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  IsStrongPassword,
+} from 'class-validator';
 
 export class UpdateUserRequestDTO {
   @IsString()

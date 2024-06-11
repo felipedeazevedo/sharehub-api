@@ -22,18 +22,18 @@ export class AuthController {
     return this.authService.register(body);
   }
 
-  @Post('forget')
+  @Post('forget-password')
   async forget(@Body() { email }: AuthForgetDTO) {
     return this.authService.forget(email);
   }
 
-  @Post('reset')
+  @Post('reset-password')
   async reset(@Body() { password, token }: AuthResetDTO) {
     return this.authService.reset(password, token);
   }
 
   @UseGuards(AuthGuard)
-  @Post('verify')
+  @Post('verify-token')
   async verify(@Body() body: any) {
     return this.authService.checkToken(body.token);
   }
