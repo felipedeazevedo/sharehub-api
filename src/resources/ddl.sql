@@ -4,7 +4,7 @@ CREATE TABLE users (
     registration VARCHAR(11) NOT NULL,
     type ENUM('STUDENT', 'TEACHER') NOT NULL,
     email VARCHAR(100) NOT NULL,
-    password VARCHAR(20) NOT NULL,
+    password VARCHAR(60) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     updated_at TIMESTAMP
