@@ -10,7 +10,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('ShareHub REST API')
-    .setDescription('REST API used for share hub marketplace.')
+    .setDescription('REST API used for ShareHub marketplace.')
     .setVersion('1.0')
     .addTag('users')
     .addTag('auth')

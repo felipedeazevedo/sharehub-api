@@ -10,12 +10,14 @@ export class ProductEntity {
   @Column({
     nullable: false,
     type: 'varchar',
+    length: 100,
   })
   title: string;
 
   @Column({
     type: 'varchar',
     nullable: true,
+    length: 250,
   })
   description: string;
 

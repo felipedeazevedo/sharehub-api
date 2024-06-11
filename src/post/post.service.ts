@@ -1,5 +1,4 @@
 import {
-  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -8,11 +7,9 @@ import { CreatePostRequestDTO } from './dto/CreatePostRequestDTO';
 import { PostRepository } from './post.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostEntity } from './entity/post.entity';
-import { ProductRepository } from '../product/product.repository';
 import { UpdatePostRequestDTO } from './dto/UpdatePostRequestDTO';
 import { UserService } from '../user/user.service';
-import { UserEntity } from "../user/entity/user.entity";
-import { ProductService } from "../product/product.service";
+import { ProductService } from '../product/product.service';
 
 @Injectable()
 export class PostService {
@@ -37,7 +34,7 @@ export class PostService {
       const new_post: PostEntity = this.postRepository.create({
         product: product,
         user: user,
-        updatedAt: new Date(),
+        createdAt: new Date(),
       });
       return await this.postRepository.save(new_post);
     } catch (e) {

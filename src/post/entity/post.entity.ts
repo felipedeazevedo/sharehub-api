@@ -24,12 +24,14 @@ export class PostEntity {
   @Column({
     type: 'timestamp',
     nullable: false,
+    name: 'created_at',
   })
   createdAt: Date;
 
   @Column({
     type: 'timestamp',
     nullable: true,
+    name: 'updated_at',
   })
   updatedAt: Date;
 }

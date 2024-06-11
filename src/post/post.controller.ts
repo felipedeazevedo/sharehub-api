@@ -22,10 +22,10 @@ import { Role } from '../enums/role.enums';
 import { RoleGuard } from '../guards/role.guard';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 
-@ApiTags('Post')
+@ApiTags('posts')
 @Controller('post')
 export class PostController {
-  constructor() {}
+  constructor(private readonly postService: PostService) {}
 
   @Roles(Role.STUDENT)
   @UseGuards(RoleGuard)
@@ -44,7 +44,7 @@ export class PostController {
     )
     pictures: Array<Express.Multer.File>,
   ) {
-    return 'hello world';
+    return this.postService.create(body);
   }
 
   @Roles(Role.STUDENT)
