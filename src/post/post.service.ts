@@ -61,11 +61,15 @@ export class PostService {
   }
 
   async update(id: number, updatePostRequestDTO: UpdatePostRequestDTO) {
+    console.log('TESTE' + JSON.stringify(updatePostRequestDTO));
+    console.log('ID' + id);
     const post = await this.findOne(id);
     if (!post) {
       throw new NotFoundException(`O anúncio ${id} não existe.`);
     }
+    console.log('post' + JSON.stringify(post));
 
+    console.log('TITLE' + JSON.stringify(updatePostRequestDTO.product));
     const updatedProduct = await this.productService.update(
       post.product.id,
       updatePostRequestDTO.product,

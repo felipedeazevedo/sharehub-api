@@ -8,10 +8,7 @@ import {
 import { ProductCategory } from '../../enums/productCategory.enum';
 import { ProductCondition } from '../../enums/productCondition.enum';
 
-export class UpdateProdutcRequestDTO {
-  @IsNumber()
-  id: number;
-
+export class UpdateProductRequestDTO {
   @IsString()
   @IsOptional()
   title: string;

@@ -8,6 +8,7 @@ import { UserEntity } from '../user/entity/user.entity';
 import { ProductModule } from '../product/product.module';
 import { UserModule } from '../user/user.module';
 import { AuthModule } from '../auth/auth.module';
+import { FileModule } from '../file/file.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AuthModule } from '../auth/auth.module';
     ProductModule,
     UserModule,
     AuthModule,
+    FileModule,
   ],
   controllers: [PostController],
   providers: [PostService],

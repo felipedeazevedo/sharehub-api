@@ -1,10 +1,9 @@
 import { ValidateNested } from 'class-validator';
-import { UpdateProdutcRequestDTO } from '../../product/dto/UpdateProdutcRequestDTO';
+import { UpdateProductRequestDTO } from '../../product/dto/UpdateProductRequestDTO';
 import { Type } from 'class-transformer';
-import { CreateProductRequestDTO } from '../../product/dto/CreateProductRequestDTO';
 
 export class UpdatePostRequestDTO {
   @ValidateNested({ each: true })
-  @Type(() => CreateProductRequestDTO)
-  product: UpdateProdutcRequestDTO;
+  @Type(() => UpdateProductRequestDTO)
+  product: UpdateProductRequestDTO;
 }
