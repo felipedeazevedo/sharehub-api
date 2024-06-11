@@ -1,12 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { MaterialListRequestDTO } from './dto/MaterialListRequestDTO';
-import { PrismaService } from '../prisma/prisma.service';
+import { CreateMaterialListRequestDTO } from './dto/CreateMaterialListRequestDTO';
+import { MaterialListRepository } from "./material-list.repository";
 
 @Injectable()
 export class MaterialListService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly materialListRepository: MaterialListRepository,
+  ) {}
 
-  async create(materialListRequestDTO: MaterialListRequestDTO) {
+  /*async create(materialListRequestDTO: MaterialListRequestDTO) {
     return 'Hello world';
   }
 
@@ -28,5 +30,5 @@ export class MaterialListService {
 
   async exists(id: number) {
     return 'Hello world';
-  }
+  }*/
 }

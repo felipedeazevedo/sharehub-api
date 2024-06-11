@@ -14,7 +14,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { PostRequestDTO } from './dto/PostRequestDTO';
+import { CreatePostRequestDTO } from './dto/CreatePostRequestDTO';
 import { PostService } from './post.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Roles } from '../decorators/role.decorator';
@@ -22,7 +22,7 @@ import { Role } from '../enums/role.enums';
 import { RoleGuard } from '../guards/role.guard';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 
-@ApiTags('post')
+@ApiTags('Post')
 @Controller('post')
 export class PostController {
   constructor() {}
@@ -32,7 +32,7 @@ export class PostController {
   @UseInterceptors(FilesInterceptor('pictures'))
   @Post()
   async create(
-    @Body() body: PostRequestDTO,
+    @Body() body: CreatePostRequestDTO,
     @UploadedFiles(
       new ParseFilePipe({
         validators: [
@@ -52,7 +52,7 @@ export class PostController {
   @Put(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: PostRequestDTO,
+    @Body() body: CreatePostRequestDTO,
     @UploadedFiles(
       new ParseFilePipe({
         validators: [

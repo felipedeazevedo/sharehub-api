@@ -1,6 +1,10 @@
-import { IsString } from 'class-validator';
+import { IsNotEmptyObject, IsNumber } from 'class-validator';
+import { CreateProductRequestDTO } from '../../product/dto/CreateProductRequestDTO';
 
-export class PostRequestDTO {
-  @IsString()
-  title: string;
+export class CreatePostRequestDTO {
+  @IsNotEmptyObject()
+  product: CreateProductRequestDTO;
+
+  @IsNumber()
+  userId: number;
 }

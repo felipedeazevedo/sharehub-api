@@ -1,32 +1,86 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PostRequestDTO } from './dto/PostRequestDTO';
-import { PrismaService } from '../prisma/prisma.service';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { CreatePostRequestDTO } from './dto/CreatePostRequestDTO';
+import { PostRepository } from './post.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PostEntity } from './entity/post.entity';
+import { ProductRepository } from '../product/product.repository';
+import { UpdatePostRequestDTO } from './dto/UpdatePostRequestDTO';
+import { UserService } from '../user/user.service';
+import { UserEntity } from "../user/entity/user.entity";
+import { ProductService } from "../product/product.service";
 
 @Injectable()
 export class PostService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    @InjectRepository(PostEntity)
+    private readonly postRepository: PostRepository,
+    private readonly productService: ProductService,
+    private readonly userService: UserService,
+  ) {}
 
-  async create(userRequestDTO: PostRequestDTO) {
-    return 'Hello world';
+  async create(createPostRequestDTO: CreatePostRequestDTO) {
+    try {
+      const product = await this.productService.create(
+        createPostRequestDTO.product,
+      );
+      const user = await this.userService.findOne(createPostRequestDTO.userId);
+
+      if (!user) {
+        throw new NotFoundException('Usuário não encontrado.');
+      }
+
+      const new_post: PostEntity = this.postRepository.create({
+        product: product,
+        user: user,
+        updatedAt: new Date(),
+      });
+      return await this.postRepository.save(new_post);
+    } catch (e) {
+      throw new InternalServerErrorException(e);
+    }
   }
 
   async findOne(id: number) {
-    return 'Hello world';
+    return this.postRepository.findOneBy({ id });
   }
 
   async findAll() {
-    return 'Hello world';
+    return this.postRepository.find();
   }
 
-  async update(id: number, userRequestDTO: PostRequestDTO) {
-    return 'Hello world';
+  async update(id: number, updatePostRequestDTO: UpdatePostRequestDTO) {
+    await this.exists(id);
+
+    const product = await this.productService.update(
+      updatePostRequestDTO.product,
+    );
+
+    await this.postRepository.update(id, {
+      product: product,
+      updatedAt: new Date(),
+    });
+
+    return this.findOne(id);
   }
 
   async delete(id: number) {
-    return 'Hello world';
+    await this.exists(id);
+
+    return this.postRepository.delete(id);
   }
 
   async exists(id: number) {
-    return 'Hello world';
+    if (
+      !(await this.postRepository.exists({
+        where: { id },
+      }))
+    ) {
+      throw new NotFoundException(`O anúncio ${id} não existe.`);
+    }
   }
 }

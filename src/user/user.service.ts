@@ -1,66 +1,93 @@
 import {
   ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { UserRequestDTO } from './dto/UserRequestDTO';
-import { PrismaService } from '../prisma/prisma.service';
+  Injectable, InternalServerErrorException,
+  NotFoundException
+} from "@nestjs/common";
+import { CreateUserRequestDTO } from './dto/CreateUserRequestDTO';
 import * as bcrypt from 'bcrypt';
+import { UserRepository } from './user.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from './entity/user.entity';
+import { UpdateUserRequestDTO } from './dto/UpdateUserRequestDTO';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository: UserRepository,
+  ) {}
 
-  async create(userRequestDTO: UserRequestDTO) {
-    const user = await this.prismaService.user.findFirst({
-      where: { email: userRequestDTO.email },
-    });
+  async create(createUserRequestDTO: CreateUserRequestDTO) {
+    try {
+      const existant_user = await this.userRepository.findOneBy({
+        email: createUserRequestDTO.email,
+      });
 
-    if (user) {
-      throw new ConflictException(
-        'Já existe um usuário cadastrado com esse email.',
+      if (existant_user) {
+        throw new ConflictException(
+          'Já existe um usuário cadastrado com esse email.',
+        );
+      }
+
+      createUserRequestDTO.password = await bcrypt.hash(
+        createUserRequestDTO.password,
+        await bcrypt.genSalt(),
       );
+
+      const new_user: UserEntity = this.userRepository.create({
+        name: createUserRequestDTO.name,
+        registration: createUserRequestDTO.registration,
+        email: createUserRequestDTO.email,
+        password: createUserRequestDTO.password,
+        type: createUserRequestDTO.type,
+        phone: createUserRequestDTO.phone,
+        createdAt: new Date(),
+        updatedAt: null,
+      });
+
+      return await this.userRepository.save(new_user);
+    } catch (e) {
+      if (e instanceof ConflictException) {
+        throw e;
+      } else {
+        throw new InternalServerErrorException(
+          'Erro ao criar usuário: ' + e.message,
+        );
+      }
     }
-
-    userRequestDTO.password = await bcrypt.hash(
-      userRequestDTO.password,
-      await bcrypt.genSalt(),
-    );
-
-    return this.prismaService.user.create({
-      data: userRequestDTO,
-    });
   }
 
   async findOne(id: number) {
-    return this.prismaService.user.findUnique({
-      where: { id },
-    });
+    return this.userRepository.findOneBy({ id });
   }
 
-  async findAll() {
-    return this.prismaService.user.findMany();
-  }
-
-  async update(id: number, userRequestDTO: UserRequestDTO) {
+  async update(id: number, updateUserRequestDTO: UpdateUserRequestDTO) {
     await this.exists(id);
 
-    return this.prismaService.user.update({
-      data: userRequestDTO,
-      where: { id },
+    await this.userRepository.update(id, {
+      name: updateUserRequestDTO.name,
+      registration: updateUserRequestDTO.registration,
+      email: updateUserRequestDTO.email,
+      password: updateUserRequestDTO.password,
+      phone: updateUserRequestDTO.phone,
+      updatedAt: new Date(),
     });
+
+    return this.findOne(id);
   }
 
   async delete(id: number) {
     await this.exists(id);
 
-    return this.prismaService.user.delete({
-      where: { id },
-    });
+    return this.userRepository.delete(id);
   }
 
   async exists(id: number) {
-    if (!(await this.findOne(id))) {
+    if (
+      !(await this.userRepository.exists({
+        where: { id },
+      }))
+    ) {
       throw new NotFoundException(`O usuário ${id} não existe.`);
     }
   }

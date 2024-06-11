@@ -1,15 +1,16 @@
 import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+  BadRequestException, HttpStatus,
+  Injectable, InternalServerErrorException,
+  UnauthorizedException
+} from "@nestjs/common";
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../prisma/prisma.service';
-import { User } from '@prisma/client';
 import { UserService } from '../user/user.service';
 import { AuthRegisterDTO } from './dto/auth-register.dto';
 import * as bcrypt from 'bcrypt';
 import { MailerService } from '@nestjs-modules/mailer';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from '../user/entity/user.entity';
+import { UserRepository } from '../user/user.repository';
 
 @Injectable()
 export class AuthService {
@@ -18,12 +19,13 @@ export class AuthService {
 
   constructor(
     private readonly jwtService: JwtService,
-    private readonly prismaService: PrismaService,
     private readonly userService: UserService,
     private readonly mailerService: MailerService,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: UserRepository,
   ) {}
 
-  async createToken(user: User) {
+  async createToken(user: UserEntity) {
     return {
       accessToken: this.jwtService.sign(
         {
@@ -32,7 +34,7 @@ export class AuthService {
           email: user.email,
         },
         {
-          expiresIn: '7d',
+          expiresIn: '3d',
           subject: String(user.id),
           issuer: this.issuer,
           audience: this.audience,
@@ -53,11 +55,7 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    const user = await this.prismaService.user.findFirst({
-      where: {
-        email,
-      },
-    });
+    const user = await this.userRepository.findOneBy({ email });
 
     if (!user) {
       throw new UnauthorizedException('E-mail e/ou senha incorretos.');
@@ -70,39 +68,44 @@ export class AuthService {
   }
 
   async forget(email: string) {
-    const user = await this.prismaService.user.findFirst({
-      where: {
-        email,
-      },
-    });
+    try {
+      const user = await this.userRepository.findOneBy({ email });
 
-    if (!user) {
-      throw new UnauthorizedException('E-mail está incorreto.');
+      if (!user) {
+        throw new UnauthorizedException('E-mail está incorreto.');
+      }
+
+      const token = this.jwtService.sign(
+        {
+          id: user.id,
+        },
+        {
+          expiresIn: '30 minutes',
+          subject: String(user.id),
+          issuer: 'forget',
+          audience: this.audience,
+        },
+      );
+
+      await this.mailerService.sendMail({
+        subject: 'Recuperação de senha ShareHub',
+        to: email,
+        template: 'reset-password',
+        context: {
+          name: user.name,
+          token: token,
+        },
+      });
+
+      return {
+        status: HttpStatus.OK,
+        message: 'E-mail enviado com senha temporária.',
+      };
+    } catch (e) {
+      throw new InternalServerErrorException(
+        'Não foi possível recuperar a senha: ' + e,
+      );
     }
-
-    const token = this.jwtService.sign(
-      {
-        id: user.id,
-      },
-      {
-        expiresIn: '30 minutes',
-        subject: String(user.id),
-        issuer: 'forget',
-        audience: this.audience,
-      },
-    );
-
-    await this.mailerService.sendMail({
-      subject: 'Recuperação de senha ShareHub',
-      to: email,
-      template: 'reset-password',
-      context: {
-        name: user.name,
-        token: token,
-      },
-    });
-
-    return true;
   }
 
   async reset(password: string, token: string) {
@@ -116,14 +119,11 @@ export class AuthService {
         throw new BadRequestException('Token inválido.');
       }
 
-      const user = await this.prismaService.user.update({
-        where: {
-          id: Number(data.id),
-        },
-        data: {
-          password: await bcrypt.hash(password, await bcrypt.genSalt()),
-        },
+      await this.userRepository.update(Number(data.id), {
+        password,
       });
+
+      const user = await this.userService.findOne(Number(data.id));
 
       return this.createToken(user);
     } catch (e) {
@@ -134,14 +134,5 @@ export class AuthService {
   async register(data: AuthRegisterDTO) {
     const user = await this.userService.create(data);
     return this.createToken(user);
-  }
-
-  isValidToken(token: string) {
-    try {
-      this.checkToken(token);
-      return true;
-    } catch (e) {
-      return false;
-    }
   }
 }
