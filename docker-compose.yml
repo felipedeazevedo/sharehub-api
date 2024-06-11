@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  mysql:
+    volumes:
+      - mysqldb:/var/lib/mysql
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: sharehub_db
+      MYSQL_USER: sharehub_user
+      MYSQL_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysqldb:
+    driver: local

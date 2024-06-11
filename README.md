@@ -11,6 +11,18 @@ As funcionalidades implementadas neste mpv, são:
 
 ## Rodando o projeto
 
+- Para o banco de dados, faça o download do docker em sua máquina para poder rodar uma instância do mysql.
+- Feito use, rode o seguinte comando:
+
+```bash
+$ docker-compose up
+```
+
+Lembre que as informações de conexão definidas no docker-compose.yml pracisam estar no arquivo
+.env
+
+## Rodando o projeto
+
 ```bash
 # development
 $ npm run start
@@ -18,6 +30,8 @@ $ npm run start
 # watch mode
 $ npm run start:dev
 ```
+
+
 
 
 

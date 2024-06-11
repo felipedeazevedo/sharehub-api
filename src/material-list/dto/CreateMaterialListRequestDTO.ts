@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 
-export class MaterialListRequestDTO {
+export class CreateMaterialListRequestDTO {
   @IsString()
   title: string;
 }
