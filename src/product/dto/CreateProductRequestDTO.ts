@@ -1,6 +1,7 @@
-import { IsDecimal, IsString } from 'class-validator';
+import { IsDecimal, IsEnum, IsString } from 'class-validator';
 import { ProductCategory } from '../../enums/productCategory.enum';
 import { ProductCondition } from '../../enums/productCondition.enum';
+import { ProductEntity } from '../entity/product.entity';
 
 export class CreateProductRequestDTO {
   @IsString()
@@ -12,9 +13,9 @@ export class CreateProductRequestDTO {
   @IsDecimal()
   price: number;
 
-  @IsString()
+  @IsEnum(ProductCategory)
   category: ProductCategory;
 
-  @IsString()
+  @IsEnum(ProductEntity)
   condition: ProductCondition;
 }

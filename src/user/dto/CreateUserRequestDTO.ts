@@ -1,5 +1,6 @@
 import {
   IsEmail,
+  IsEnum,
   IsPhoneNumber,
   IsString,
   IsStrongPassword,
@@ -13,7 +14,7 @@ export class CreateUserRequestDTO {
   @IsString()
   registration: string;
 
-  @IsString()
+  @IsEnum(Role)
   type: Role;
 
   @IsEmail()

@@ -28,16 +28,14 @@ export class ProductEntity {
   price: number;
 
   @Column({
-    type: 'varchar',
-    nullable: false,
-    length: 30,
+    type: 'enum',
+    enum: ProductCategory,
   })
   category: ProductCategory;
 
   @Column({
-    type: 'varchar',
-    nullable: false,
-    length: 25,
+    type: 'enum',
+    enum: ProductCondition,
   })
   condition: ProductCondition;
 }

@@ -10,6 +10,8 @@ import { PostEntity } from './entity/post.entity';
 import { UpdatePostRequestDTO } from './dto/UpdatePostRequestDTO';
 import { UserService } from '../user/user.service';
 import { ProductService } from '../product/product.service';
+import { UserResponseDTO } from "../user/dto/UserResponseDTO";
+import { PostResponseDTO } from "./dto/PostResponseDTO";
 
 @Injectable()
 export class PostService {
@@ -35,8 +37,9 @@ export class PostService {
         product: product,
         user: user,
         createdAt: new Date(),
+        active: true,
       });
-      return await this.postRepository.save(new_post);
+      return this.mapToDTO(await this.postRepository.save(new_post));
     } catch (e) {
       throw new InternalServerErrorException(e);
     }
@@ -47,7 +50,9 @@ export class PostService {
   }
 
   async findAll() {
-    return this.postRepository.find();
+    return this.postRepository.find({
+      relations: ['product', 'user'],
+    });
   }
 
   async update(id: number, updatePostRequestDTO: UpdatePostRequestDTO) {
@@ -79,5 +84,28 @@ export class PostService {
     ) {
       throw new NotFoundException(`O anúncio ${id} não existe.`);
     }
+  }
+
+  mapToDTO(post: PostEntity): PostResponseDTO {
+    return {
+      id: post.id,
+      actve: post.active,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      product: {
+        id: post.product.id,
+        title: post.product.title,
+        description: post.product.description,
+        price: post.product.price,
+        category: post.product.category,
+        condition: post.product.condition,
+      },
+      user: {
+        id: post.user.id,
+        name: post.user.name,
+        registration: post.user.registration,
+        phone: post.user.phone,
+      },
+    };
   }
 }

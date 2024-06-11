@@ -14,11 +14,15 @@ export class PostEntity {
   id: number;
 
   @OneToOne(() => ProductEntity)
-  @JoinColumn()
+  @JoinColumn({
+    name: 'product_id',
+  })
   product: ProductEntity;
 
   @OneToOne(() => UserEntity)
-  @JoinColumn()
+  @JoinColumn({
+    name: 'user_id',
+  })
   user: UserEntity;
 
   @Column({
@@ -34,4 +38,9 @@ export class PostEntity {
     name: 'updated_at',
   })
   updatedAt: Date;
+
+  @Column({
+    type: 'boolean',
+  })
+  active: boolean;
 }

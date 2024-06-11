@@ -22,28 +22,19 @@ import { Role } from '../enums/role.enums';
 import { RoleGuard } from '../guards/role.guard';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { UpdatePostRequestDTO } from './dto/UpdatePostRequestDTO';
+import { AuthGuard } from "../guards/auth.guard";
 
-@ApiTags('posts')
-@Controller('post')
+@ApiTags('Posts')
+@Controller('posts')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Roles(Role.STUDENT)
-  @UseGuards(RoleGuard)
+  @UseGuards(AuthGuard, RoleGuard)
   @UseInterceptors(FilesInterceptor('pictures'))
   @Post()
   async create(
     @Body() body: CreatePostRequestDTO,
-    @UploadedFiles(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 1000 }),
-          new FileTypeValidator({ fileType: 'image/jpeg' }),
-          new FileTypeValidator({ fileType: 'pdf' }),
-        ],
-      }),
-    )
-    pictures: Array<Express.Multer.File>,
   ) {
     return this.postService.create(body);
   }

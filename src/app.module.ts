@@ -9,10 +9,10 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as process from 'node:process';
 import { UserEntity } from './user/entity/user.entity';
-import { PostEntity } from "./post/entity/post.entity";
-import { ProductEntity } from "./product/entity/product.entity";
-import { PostModule } from "./post/post.module";
-import { ProductModule } from "./product/product.module";
+import { PostEntity } from './post/entity/post.entity';
+import { ProductEntity } from './product/entity/product.entity';
+import { PostModule } from './post/post.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [

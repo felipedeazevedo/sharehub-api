@@ -1,4 +1,4 @@
-import { IsEmail, IsString, IsStrongPassword } from 'class-validator';
+import { IsEmail, IsEnum, IsString, IsStrongPassword } from "class-validator";
 import { Role } from '../../enums/role.enums';
 
 export class AuthRegisterDTO {
@@ -8,7 +8,7 @@ export class AuthRegisterDTO {
   @IsString()
   registration: string;
 
-  @IsString()
+  @IsEnum(Role)
   type: Role;
 
   @IsEmail()

@@ -13,6 +13,7 @@ export class ProductService {
   ) {}
 
   async create(createProductRequestDTO: CreateProductRequestDTO) {
+    console.log('TESTE DTO' + JSON.stringify(createProductRequestDTO));
     const product_instance = this.productRepository.create({
       title: createProductRequestDTO.title,
       description: createProductRequestDTO.description,
@@ -20,7 +21,7 @@ export class ProductService {
       category: createProductRequestDTO.category,
       condition: createProductRequestDTO.condition,
     });
-
+    console.log('TESTE' + JSON.stringify(product_instance));
     return await this.productRepository.save(product_instance);
   }
 

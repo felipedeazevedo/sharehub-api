@@ -12,9 +12,9 @@ async function bootstrap() {
     .setTitle('ShareHub REST API')
     .setDescription('REST API used for ShareHub marketplace.')
     .setVersion('1.0')
-    .addTag('users')
-    .addTag('auth')
-    .addTag('posts')
+    .addTag('Users')
+    .addTag('Authentication')
+    .addTag('Posts')
     .addTag('material-lists')
     .build();
   const document = SwaggerModule.createDocument(app, config);
