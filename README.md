@@ -3,7 +3,7 @@
 Esse repositório contém o back-end para o ShareHub, marketplace de equipamentos médicos criado pelos
 alunos das disciplinas de Arquitetura de Software e Programação Web, da Universidade Católica de Brasília.
 
-As funcionalidades implementadas neste mpv, são:
+Os endpoints da API permitem:
 - Criar, editar, litar e deletar publicações de equipamentos
 - Cadastro e login
 - Recuperação de senha
@@ -11,15 +11,15 @@ As funcionalidades implementadas neste mpv, são:
 
 ## Banco de dados local
 
-- Para o banco de dados, faça o download do docker em sua máquina para poder rodar uma instância do mysql.
-- Feito isso, rode o seguinte comando:
+- Para rodar o banco de dados, faça o download do Docker em sua máquina para poder rodar uma instância do MySQL.
+- Feito isso, rode o seguinte comando estando na raiz do projeto:
 
 ```bash
 $ docker-compose up
 ```
 
-Lembre que as informações de conexão definidas no docker-compose.yml pracisam estar no arquivo
-.env
+Lembre que as informações de conexão definidas no docker-compose.yml pracisam estar definidas também no arquivo
+.env (Existe um exemplo no arquivo env.example, mas em caso de dúvides peça ajuda ao dono do repo)
 
 ## Rodando o projeto
 
