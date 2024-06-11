@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { ProductCondition } from "../../enums/productCondition.enum";
-import { ProductCategory } from "../../enums/productCategory.enum";
+import { ProductCondition } from '../../enums/productCondition.enum';
+import { ProductCategory } from '../../enums/productCategory.enum';
 
 @Entity('products')
 export class ProductEntity {

@@ -7,14 +7,14 @@ import { ProductEntity } from '../product/entity/product.entity';
 import { UserEntity } from '../user/entity/user.entity';
 import { ProductModule } from '../product/product.module';
 import { UserModule } from '../user/user.module';
-import { AuthModule } from "../auth/auth.module";
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([PostEntity, ProductEntity, UserEntity]),
     ProductModule,
     UserModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [PostController],
   providers: [PostService],

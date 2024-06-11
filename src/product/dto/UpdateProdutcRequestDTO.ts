@@ -1,4 +1,10 @@
-import { IsDecimal, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsDecimal,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { ProductCategory } from '../../enums/productCategory.enum';
 import { ProductCondition } from '../../enums/productCondition.enum';
 
@@ -18,11 +24,11 @@ export class UpdateProdutcRequestDTO {
   @IsOptional()
   price: number;
 
-  @IsString()
+  @IsEnum(ProductCategory)
   @IsOptional()
   category: ProductCategory;
 
-  @IsString()
+  @IsEnum(ProductCondition)
   @IsOptional()
   condition: ProductCondition;
 }

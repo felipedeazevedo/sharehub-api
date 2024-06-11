@@ -10,8 +10,7 @@ import { PostEntity } from './entity/post.entity';
 import { UpdatePostRequestDTO } from './dto/UpdatePostRequestDTO';
 import { UserService } from '../user/user.service';
 import { ProductService } from '../product/product.service';
-import { UserResponseDTO } from "../user/dto/UserResponseDTO";
-import { PostResponseDTO } from "./dto/PostResponseDTO";
+import { PostResponseDTO } from './dto/PostResponseDTO';
 
 @Injectable()
 export class PostService {
@@ -46,24 +45,34 @@ export class PostService {
   }
 
   async findOne(id: number) {
-    return this.postRepository.findOneBy({ id });
+    return this.mapToDTO(
+      await this.postRepository.findOne({
+        where: { id },
+        relations: ['product', 'user'],
+      }),
+    );
   }
 
   async findAll() {
-    return this.postRepository.find({
+    const posts: PostEntity[] = await this.postRepository.find({
       relations: ['product', 'user'],
     });
+    return posts.map((post) => this.mapToDTO(post));
   }
 
   async update(id: number, updatePostRequestDTO: UpdatePostRequestDTO) {
-    await this.exists(id);
+    const post = await this.findOne(id);
+    if (!post) {
+      throw new NotFoundException(`O anúncio ${id} não existe.`);
+    }
 
-    const product = await this.productService.update(
+    const updatedProduct = await this.productService.update(
+      post.product.id,
       updatePostRequestDTO.product,
     );
 
     await this.postRepository.update(id, {
-      product: product,
+      product: updatedProduct,
       updatedAt: new Date(),
     });
 
