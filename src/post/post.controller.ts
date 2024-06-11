@@ -21,6 +21,7 @@ import { Roles } from '../decorators/role.decorator';
 import { Role } from '../enums/role.enums';
 import { RoleGuard } from '../guards/role.guard';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { UpdatePostRequestDTO } from './dto/UpdatePostRequestDTO';
 
 @ApiTags('posts')
 @Controller('post')
@@ -52,7 +53,7 @@ export class PostController {
   @Put(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: CreatePostRequestDTO,
+    @Body() body: UpdatePostRequestDTO,
     @UploadedFiles(
       new ParseFilePipe({
         validators: [
@@ -64,23 +65,23 @@ export class PostController {
     )
     pictures: Array<Express.Multer.File>,
   ) {
-    return 'hello world';
+    return this.postService.update(id, body);
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return 'hello world';
+    return this.postService.findOne(id);
   }
 
   @Get()
   findAll() {
-    return 'hello world';
+    return this.postService.findAll();
   }
 
   @Roles(Role.STUDENT)
   @UseGuards(RoleGuard)
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number) {
-    return 'hello world';
+    return this.postService.delete(id);
   }
 }

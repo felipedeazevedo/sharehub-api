@@ -11,6 +11,8 @@ import * as process from 'node:process';
 import { UserEntity } from './user/entity/user.entity';
 import { PostEntity } from "./post/entity/post.entity";
 import { ProductEntity } from "./product/entity/product.entity";
+import { PostModule } from "./post/post.module";
+import { ProductModule } from "./product/product.module";
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { ProductEntity } from "./product/entity/product.entity";
     ]),
     forwardRef(() => UserModule),
     forwardRef(() => AuthModule),
+    PostModule,
+    ProductModule,
     MailerModule.forRoot({
       transport: {
         host: 'smtp.ethereal.email',
