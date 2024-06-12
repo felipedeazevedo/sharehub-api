@@ -18,8 +18,12 @@ Os endpoints da API permitem:
 $ docker-compose up
 ```
 
-- Lembre que as informações de conexão definidas no docker-compose.yml pracisam estar definidas também no arquivo
+- Em seguindo, rode os scripts presentes em src/resources/ddl.sql para criação das tabelas
+
+Lembretes:
+- As informações de conexão definidas no docker-compose.yml pracisam estar definidas também no arquivo
 .env (Existe um exemplo no arquivo env.example, mas em caso de dúvides peça ajuda ao dono do repo)
+- Para conectar-se a instância do MySQL, use exatamente as informações definidas no docker-compose.yml
 
 ## Rodando o projeto
 
