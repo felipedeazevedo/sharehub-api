@@ -32,7 +32,6 @@ export class UserEntity {
     type: 'varchar',
     nullable: false,
     length: 60,
-    select: false,
   })
   password: string;
 
