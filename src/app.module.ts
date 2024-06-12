@@ -14,6 +14,7 @@ import { ProductEntity } from './product/entity/product.entity';
 import { PostModule } from './post/post.module';
 import { ProductModule } from './product/product.module';
 import { FileModule } from './file/file.module';
+import { MaterialListModule } from "./material-list/material-list.module";
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { FileModule } from './file/file.module';
     PostModule,
     ProductModule,
     FileModule,
+    MaterialListModule,
     MailerModule.forRoot({
       transport: {
         host: 'smtp.ethereal.email',

@@ -21,7 +21,6 @@ export class FileService {
   constructor(private readonly configService: ConfigService) {}
 
   async upload(pictures: Express.Multer.File[], postId: number) {
-    console.log(pictures);
     try {
       for (const picture of pictures) {
         await this.s3Client.send(
@@ -36,7 +35,6 @@ export class FileService {
         );
       }
     } catch (e) {
-      console.log(e);
       throw new BadRequestException('Erro ao salvar imagens: ', e);
     }
   }
@@ -82,7 +80,6 @@ export class FileService {
       }
       return images;
     } catch (e) {
-      console.log(e);
       throw new BadRequestException('Erro ao recuperar imagens: ', e);
     }
   }

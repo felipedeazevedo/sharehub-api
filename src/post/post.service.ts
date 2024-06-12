@@ -11,6 +11,7 @@ import { UpdatePostRequestDTO } from './dto/UpdatePostRequestDTO';
 import { UserService } from '../user/user.service';
 import { ProductService } from '../product/product.service';
 import { PostResponseDTO } from './dto/PostResponseDTO';
+import { Role } from "../enums/role.enums";
 
 @Injectable()
 export class PostService {
@@ -29,7 +30,7 @@ export class PostService {
       const user = await this.userService.findOne(createPostRequestDTO.userId);
 
       if (!user) {
-        throw new NotFoundException('Usuário não encontrado.');
+        throw new NotFoundException('Esse usuário não existe.');
       }
 
       const new_post: PostEntity = this.postRepository.create({
@@ -61,15 +62,11 @@ export class PostService {
   }
 
   async update(id: number, updatePostRequestDTO: UpdatePostRequestDTO) {
-    console.log('TESTE' + JSON.stringify(updatePostRequestDTO));
-    console.log('ID' + id);
     const post = await this.findOne(id);
     if (!post) {
       throw new NotFoundException(`O anúncio ${id} não existe.`);
     }
-    console.log('post' + JSON.stringify(post));
 
-    console.log('TITLE' + JSON.stringify(updatePostRequestDTO.product));
     const updatedProduct = await this.productService.update(
       post.product.id,
       updatePostRequestDTO.product,

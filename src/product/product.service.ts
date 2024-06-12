@@ -27,7 +27,6 @@ export class ProductService {
     productId: number,
     updateProductRequestDTO: UpdateProductRequestDTO,
   ) {
-    console.log('DTO' + updateProductRequestDTO)
     await this.productRepository.update(productId, {
       title: updateProductRequestDTO.title,
       description: updateProductRequestDTO.description,

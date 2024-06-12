@@ -10,6 +10,7 @@ import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entity/user.entity';
 import { UpdateUserRequestDTO } from './dto/UpdateUserRequestDTO';
+import { UserResponseDTO } from './dto/UserResponseDTO';
 
 @Injectable()
 export class UserService {
@@ -65,6 +66,13 @@ export class UserService {
   async update(id: number, updateUserRequestDTO: UpdateUserRequestDTO) {
     await this.exists(id);
 
+    if (updateUserRequestDTO.password) {
+      updateUserRequestDTO.password = await bcrypt.hash(
+        updateUserRequestDTO.password,
+        await bcrypt.genSalt(),
+      );
+    }
+
     await this.userRepository.update(id, {
       name: updateUserRequestDTO.name,
       registration: updateUserRequestDTO.registration,
@@ -91,5 +99,14 @@ export class UserService {
     ) {
       throw new NotFoundException(`O usuário ${id} não existe.`);
     }
+  }
+
+  mapToDTO(user: UserEntity): UserResponseDTO {
+    return {
+      id: user.id,
+      name: user.name,
+      registration: user.registration,
+      phone: user.phone,
+    };
   }
 }

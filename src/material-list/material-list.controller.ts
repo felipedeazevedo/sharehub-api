@@ -15,22 +15,23 @@ import { ApiTags } from '@nestjs/swagger';
 import { Roles } from '../decorators/role.decorator';
 import { Role } from '../enums/role.enums';
 import { RoleGuard } from '../guards/role.guard';
-import { UpdateMaterialListRequestDTO } from "./dto/UpdateMaterialListRequestDTO";
+import { UpdateMaterialListRequestDTO } from './dto/UpdateMaterialListRequestDTO';
+import { AuthGuard } from '../guards/auth.guard';
 
 @ApiTags('Material List')
-@Controller('material-list')
+@Controller('material-lists')
 export class MaterialListController {
-  constructor() {}
+  constructor(private readonly materialListService: MaterialListService) {}
 
   @Roles(Role.TEACHER)
-  @UseGuards(RoleGuard)
+  @UseGuards(AuthGuard, RoleGuard)
   @Post()
   async create(@Body() body: CreateMaterialListRequestDTO) {
-    return 'hello world';
+    return this.materialListService.create(body);
   }
 
   @Roles(Role.TEACHER)
-  @UseGuards(RoleGuard)
+  @UseGuards(AuthGuard, RoleGuard)
   @Put(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
