@@ -87,8 +87,6 @@ export class PostController {
     await this.fileService.upload(pictures, id);
   }
 
-  @Roles(Role.STUDENT)
-  @UseGuards(AuthGuard, RoleGuard)
   @Get(':id/pictures')
   async getPostPictures(@Param('id', ParseIntPipe) postId: number) {
     return await this.fileService.getImagesByPostId(postId);

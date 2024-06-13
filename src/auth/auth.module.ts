@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import * as process from 'node:process';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../user/entity/user.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UserEntity } from '../user/entity/user.entity';
     }),
     forwardRef(() => UserModule),
     TypeOrmModule.forFeature([UserEntity]),
+    ConfigModule,
   ],
   providers: [AuthService],
   controllers: [AuthController],

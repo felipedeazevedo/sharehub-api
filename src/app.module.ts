@@ -4,8 +4,6 @@ import { AuthModule } from './auth/auth.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as process from 'node:process';
 import { UserEntity } from './user/entity/user.entity';
@@ -14,7 +12,10 @@ import { ProductEntity } from './product/entity/product.entity';
 import { PostModule } from './post/post.module';
 import { ProductModule } from './product/product.module';
 import { FileModule } from './file/file.module';
-import { MaterialListModule } from "./material-list/material-list.module";
+import { MaterialListModule } from './material-list/material-list.module';
+import { MaterialListEntity } from './material-list/entity/material-list.entity';
+import { MaterialListItemEntity } from './material-list-item/entity/material-list-item.entity';
+import { MaterialListItemModule } from './material-list-item/material-list-item.module';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { MaterialListModule } from "./material-list/material-list.module";
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
-        limit: 10,
+        limit: 100,
       },
     ]),
     forwardRef(() => UserModule),
@@ -31,26 +32,7 @@ import { MaterialListModule } from "./material-list/material-list.module";
     ProductModule,
     FileModule,
     MaterialListModule,
-    MailerModule.forRoot({
-      transport: {
-        host: 'smtp.ethereal.email',
-        port: 587,
-        auth: {
-          user: 'june53@ethereal.email',
-          pass: '1Hk7vPm8u5KwTzK4yB',
-        },
-      },
-      defaults: {
-        from: '"Share Hub" <june53@ethereal.email>',
-      },
-      template: {
-        dir: __dirname + '/templates',
-        adapter: new PugAdapter(),
-        options: {
-          strict: true,
-        },
-      },
-    }),
+    MaterialListItemModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -58,7 +40,13 @@ import { MaterialListModule } from "./material-list/material-list.module";
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UserEntity, PostEntity, ProductEntity],
+      entities: [
+        UserEntity,
+        PostEntity,
+        ProductEntity,
+        MaterialListEntity,
+        MaterialListItemEntity,
+      ],
       synchronize: false,
     }),
   ],

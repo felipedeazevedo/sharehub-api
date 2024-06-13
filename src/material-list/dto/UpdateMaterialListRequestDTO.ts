@@ -12,5 +12,5 @@ export class UpdateMaterialListRequestDTO {
   teacherId: number;
 
   @IsNotEmpty()
-  itens: MaterialListItemRequestDTO[];
+  items: MaterialListItemRequestDTO[];
 }

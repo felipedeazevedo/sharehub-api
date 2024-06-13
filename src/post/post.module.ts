@@ -9,7 +9,6 @@ import { ProductModule } from '../product/product.module';
 import { UserModule } from '../user/user.module';
 import { AuthModule } from '../auth/auth.module';
 import { FileModule } from '../file/file.module';
-import { ProductService } from '../product/product.service';
 
 @Module({
   imports: [

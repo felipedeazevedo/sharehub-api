@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -24,14 +25,18 @@ export class MaterialListEntity {
   })
   discipline: string;
 
-  @ManyToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity, { eager: true })
+  @JoinColumn({
+    name: 'teacher_id',
+  })
   teacher: UserEntity;
 
   @OneToMany(
     () => MaterialListItemEntity,
     (materialListItem) => materialListItem.materialList,
+    { eager: true },
   )
-  itens: MaterialListItemEntity[];
+  items: MaterialListItemEntity[];
 
   @Column({
     type: 'boolean',

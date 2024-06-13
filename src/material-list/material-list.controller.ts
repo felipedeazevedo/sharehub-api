@@ -37,23 +37,23 @@ export class MaterialListController {
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateMaterialListRequestDTO,
   ) {
-    return 'hello world';
+    return this.materialListService.update(id, body);
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return 'hello world';
+    return this.materialListService.findOne(id);
   }
 
   @Get()
   findAll() {
-    return 'hello world';
+    return this.materialListService.findAll();
   }
 
   @Roles(Role.TEACHER)
   @UseGuards(RoleGuard)
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number) {
-    return 'hello world';
+    return this.materialListService.delete(id);
   }
 }

@@ -15,7 +15,7 @@ import { Readable } from 'stream';
 @Injectable()
 export class FileService {
   private readonly s3Client = new S3Client({
-    region: this.configService.getOrThrow('AWS_S3_REGION'),
+    region: this.configService.getOrThrow('AWS_REGION'),
   });
 
   constructor(private readonly configService: ConfigService) {}

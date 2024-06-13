@@ -41,8 +41,8 @@ CREATE TABLE material_lists (
 
 CREATE TABLE material_lists_itens (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(60) NOT NULL,
-    descricao VARCHAR(250) NOT NULL,
+    name VARCHAR(60) NOT NULL,
+    description VARCHAR(250) NOT NULL,
     mandatory BOOLEAN NOT NULL,
     material_list_id INT NOT NULL,
     FOREIGN KEY (material_list_id) REFERENCES material_lists(id)

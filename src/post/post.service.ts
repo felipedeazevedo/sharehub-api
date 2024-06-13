@@ -11,7 +11,6 @@ import { UpdatePostRequestDTO } from './dto/UpdatePostRequestDTO';
 import { UserService } from '../user/user.service';
 import { ProductService } from '../product/product.service';
 import { PostResponseDTO } from './dto/PostResponseDTO';
-import { Role } from "../enums/role.enums";
 
 @Injectable()
 export class PostService {
@@ -33,13 +32,13 @@ export class PostService {
         throw new NotFoundException('Esse usuário não existe.');
       }
 
-      const new_post: PostEntity = this.postRepository.create({
+      const newPost: PostEntity = this.postRepository.create({
         product: product,
         user: user,
         createdAt: new Date(),
         active: true,
       });
-      return this.mapToDTO(await this.postRepository.save(new_post));
+      return this.mapToDTO(await this.postRepository.save(newPost));
     } catch (e) {
       throw new InternalServerErrorException(e);
     }
@@ -115,6 +114,7 @@ export class PostService {
         name: post.user.name,
         registration: post.user.registration,
         phone: post.user.phone,
+        email: post.user.email,
       },
     };
   }

@@ -3,4 +3,5 @@ export class UserResponseDTO {
   name: string;
   registration: string;
   phone: string;
+  email: string;
 }

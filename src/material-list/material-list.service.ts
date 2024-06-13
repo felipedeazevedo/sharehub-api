@@ -1,13 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateMaterialListRequestDTO } from './dto/CreateMaterialListRequestDTO';
 import { MaterialListRepository } from './material-list.repository';
 import { UpdateMaterialListRequestDTO } from './dto/UpdateMaterialListRequestDTO';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MaterialListEntity } from './entity/material-list.entity';
 import { MaterialListItemService } from '../material-list-item/material-list-item.service';
 import { UserService } from '../user/user.service';
-import { MaterialListItemEntity } from '../material-list-item/entity/material-list-item.entity';
-import { Role } from '../enums/role.enums';
+import { MaterialListEntity } from './entity/material-list.entity';
 
 @Injectable()
 export class MaterialListService {
@@ -19,7 +20,6 @@ export class MaterialListService {
   ) {}
 
   async create(createMaterialListRequestDTO: CreateMaterialListRequestDTO) {
-    console.log(createMaterialListRequestDTO);
     const { semester, discipline, teacherId, items } =
       createMaterialListRequestDTO;
 
@@ -28,54 +28,92 @@ export class MaterialListService {
       throw new Error('Esse usuário não existe.');
     }
 
-    const newMaterialList: MaterialListEntity =
-      this.materialListRepository.create({
-        semester: semester,
-        discipline: discipline,
-        teacher: teacher,
-      });
+    const materialList = new MaterialListEntity();
+    materialList.semester = semester;
+    materialList.discipline = discipline;
+    materialList.teacher = teacher;
+    materialList.active = true;
 
     const savedMaterialList =
-      await this.materialListRepository.save(newMaterialList);
+      await this.materialListRepository.save(materialList);
 
-    // Create and save the material list items
     for (const itemDto of items) {
-      const materialListItem = new MaterialListItemEntity();
-      materialListItem.name = itemDto.name;
-      materialListItem.description = itemDto.description;
-      materialListItem.mandatory = itemDto.mandatory;
-      materialListItem.materialList = savedMaterialList;
-
-      await this.materialListRepository.save(materialListItem);
+      await this.materiaListItemService.create(itemDto, savedMaterialList);
     }
 
-    // Return the complete material list with items
     return await this.materialListRepository.findOne({
       where: { id: savedMaterialList.id },
-      relations: ['materialListItems'],
+      relations: ['items'],
     });
   }
 
-  async findOne(id: number) {
-    return 'Hello world';
+  async findOne(id: number): Promise<MaterialListEntity | undefined> {
+    const materialList = await this.materialListRepository.findOneBy({ id });
+
+    if (!materialList) {
+      throw new NotFoundException(`Material list with ID ${id} not found`);
+    }
+
+    return materialList;
   }
 
-  async findAll() {
-    return 'Hello world';
+  async findAll(): Promise<MaterialListEntity[]> {
+    return await this.materialListRepository.find();
   }
 
   async update(
     id: number,
     materialListRequestDTO: UpdateMaterialListRequestDTO,
-  ) {
-    return 'Hello world';
+  ): Promise<MaterialListEntity> {
+    const { semester, discipline, teacherId, items } = materialListRequestDTO;
+
+    const materialList = await this.findOne(id);
+
+    if (!materialList) {
+      throw new NotFoundException(`Material list with ID ${id} not found`);
+    }
+
+    materialList.semester = semester;
+    materialList.discipline = discipline;
+
+    if (teacherId) {
+      const teacher = await this.userService.findOne(teacherId);
+      if (!teacher) {
+        throw new NotFoundException(`Teacher with ID ${teacherId} not found`);
+      }
+      materialList.teacher = teacher;
+    }
+
+    const updatedMaterialList =
+      await this.materialListRepository.save(materialList);
+
+    if (items && items.length > 0) {
+      await this.materiaListItemService.deleteByMaterialList(
+        updatedMaterialList,
+      );
+
+      for (const itemDto of items) {
+        await this.materiaListItemService.create(itemDto, updatedMaterialList);
+      }
+    }
+
+    return await this.materialListRepository.findOne({
+      where: { id: updatedMaterialList.id },
+    });
   }
 
-  async delete(id: number) {
-    return 'Hello world';
+  async delete(id: number): Promise<void> {
+    const materialList = await this.materialListRepository.findOneBy({ id });
+
+    if (!materialList) {
+      throw new NotFoundException(`Material list with ID ${id} not found`);
+    }
+
+    await this.materialListRepository.remove(materialList);
   }
 
-  async exists(id: number) {
-    return 'Hello world';
+  async exists(id: number): Promise<boolean> {
+    const materialList = await this.materialListRepository.findOneBy({ id });
+    return !!materialList;
   }
 }

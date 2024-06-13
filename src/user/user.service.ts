@@ -21,11 +21,11 @@ export class UserService {
 
   async create(createUserRequestDTO: CreateUserRequestDTO) {
     try {
-      const existant_user = await this.userRepository.findOneBy({
+      const existantUser = await this.userRepository.findOneBy({
         email: createUserRequestDTO.email,
       });
 
-      if (existant_user) {
+      if (existantUser) {
         throw new ConflictException(
           'Já existe um usuário cadastrado com esse email.',
         );
@@ -36,7 +36,7 @@ export class UserService {
         await bcrypt.genSalt(),
       );
 
-      const new_user: UserEntity = this.userRepository.create({
+      const newUser: UserEntity = this.userRepository.create({
         name: createUserRequestDTO.name,
         registration: createUserRequestDTO.registration,
         email: createUserRequestDTO.email,
@@ -47,7 +47,7 @@ export class UserService {
         updatedAt: null,
       });
 
-      return await this.userRepository.save(new_user);
+      return await this.userRepository.save(newUser);
     } catch (e) {
       if (e instanceof ConflictException) {
         throw e;
@@ -107,6 +107,7 @@ export class UserService {
       name: user.name,
       registration: user.registration,
       phone: user.phone,
+      email: user.email,
     };
   }
 }
