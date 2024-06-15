@@ -16,7 +16,7 @@ export class ProductService {
     const product_instance = this.productRepository.create({
       title: createProductRequestDTO.title,
       description: createProductRequestDTO.description,
-      price: createProductRequestDTO.price,
+      price: this.convertToDecimalPoint(createProductRequestDTO.price),
       category: createProductRequestDTO.category,
       condition: createProductRequestDTO.condition,
     });
@@ -30,7 +30,7 @@ export class ProductService {
     await this.productRepository.update(productId, {
       title: updateProductRequestDTO.title,
       description: updateProductRequestDTO.description,
-      price: updateProductRequestDTO.price,
+      price: this.convertToDecimalPoint(updateProductRequestDTO.price),
       category: updateProductRequestDTO.category,
       condition: updateProductRequestDTO.condition,
     });
@@ -40,5 +40,10 @@ export class ProductService {
 
   async findOne(id: number) {
     return this.productRepository.findOneBy({ id });
+  }
+
+  convertToDecimalPoint(brNumber: string): number {
+    const normalizedNumber = brNumber.replace(/\./g, '').replace(',', '.');
+    return parseFloat(normalizedNumber);
   }
 }

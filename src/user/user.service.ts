@@ -4,13 +4,13 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateUserRequestDTO } from './dto/CreateUserRequestDTO';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entity/user.entity';
 import { UpdateUserRequestDTO } from './dto/UpdateUserRequestDTO';
 import { UserResponseDTO } from './dto/UserResponseDTO';
+import { AuthRegisterDTO } from '../auth/dto/auth-register.dto';
 
 @Injectable()
 export class UserService {
@@ -19,10 +19,10 @@ export class UserService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async create(createUserRequestDTO: CreateUserRequestDTO) {
+  async create(user: AuthRegisterDTO) {
     try {
       const existantUser = await this.userRepository.findOneBy({
-        email: createUserRequestDTO.email,
+        email: user.email,
       });
 
       if (existantUser) {
@@ -31,18 +31,18 @@ export class UserService {
         );
       }
 
-      createUserRequestDTO.password = await bcrypt.hash(
-        createUserRequestDTO.password,
+      user.password = await bcrypt.hash(
+        user.password,
         await bcrypt.genSalt(),
       );
 
       const newUser: UserEntity = this.userRepository.create({
-        name: createUserRequestDTO.name,
-        registration: createUserRequestDTO.registration,
-        email: createUserRequestDTO.email,
-        password: createUserRequestDTO.password,
-        type: createUserRequestDTO.type,
-        phone: createUserRequestDTO.phone,
+        name: user.name,
+        registration: user.registration,
+        email: user.email,
+        password: user.password,
+        type: user.type,
+        phone: user.phone,
         createdAt: new Date(),
         updatedAt: null,
       });

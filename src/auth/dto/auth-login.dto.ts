@@ -1,7 +1,8 @@
-import { IsEmail, IsStrongPassword } from 'class-validator';
+import { IsEmail, IsStrongPassword, MaxLength } from 'class-validator';
 
 export class AuthLoginDTO {
   @IsEmail()
+  @MaxLength(100)
   email: string;
 
   @IsStrongPassword({

@@ -1,17 +1,31 @@
-import { IsEmail, IsEnum, IsString, IsStrongPassword } from "class-validator";
+import {
+  IsEmail,
+  IsEnum,
+  IsPhoneNumber,
+  IsString,
+  IsStrongPassword,
+  Matches,
+  MaxLength,
+} from 'class-validator';
 import { Role } from '../../enums/role.enums';
 
 export class AuthRegisterDTO {
   @IsString()
+  @MaxLength(60)
   name: string;
 
   @IsString()
+  @MaxLength(11)
+  @Matches(/^[Uu][Cc]\d{8}$/, {
+    message: 'Formato de matrícula inválido. Deve ser UC seguido de 8 dígitos.',
+  })
   registration: string;
 
   @IsEnum(Role)
   type: Role;
 
   @IsEmail()
+  @MaxLength(100)
   email: string;
 
   @IsStrongPassword({
@@ -24,5 +38,7 @@ export class AuthRegisterDTO {
   password: string;
 
   @IsString()
+  @IsPhoneNumber('BR')
+  @MaxLength(20)
   phone: string;
 }

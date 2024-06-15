@@ -5,11 +5,9 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { CreateUserRequestDTO } from './dto/CreateUserRequestDTO';
 import { UserService } from './user.service';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../guards/auth.guard';
@@ -19,11 +17,6 @@ import { UpdateUserRequestDTO } from './dto/UpdateUserRequestDTO';
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Post()
-  async create(@Body() body: CreateUserRequestDTO) {
-    return this.userService.create(body);
-  }
 
   @UseGuards(AuthGuard)
   @Get(':id')

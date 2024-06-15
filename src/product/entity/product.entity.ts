@@ -23,7 +23,8 @@ export class ProductEntity {
 
   @Column({
     type: 'decimal',
-    precision: 2,
+    precision: 10,
+    scale: 2,
   })
   price: number;
 

@@ -40,7 +40,10 @@ export class PostService {
       });
       return this.mapToDTO(await this.postRepository.save(newPost));
     } catch (e) {
-      throw new InternalServerErrorException(e);
+      if (e instanceof NotFoundException) {
+        throw e;
+      }
+      throw new InternalServerErrorException('Erro ao criar o post.');
     }
   }
 
@@ -105,7 +108,7 @@ export class PostService {
         id: post.product.id,
         title: post.product.title,
         description: post.product.description,
-        price: post.product.price,
+        price: this.convertToBrFormat(post.product.price),
         category: post.product.category,
         condition: post.product.condition,
       },
@@ -117,5 +120,12 @@ export class PostService {
         email: post.user.email,
       },
     };
+  }
+
+  convertToBrFormat(decimalNumber: number): string {
+    return decimalNumber.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 }
