@@ -51,7 +51,7 @@ export class MaterialListController {
   }
 
   @Roles(Role.TEACHER)
-  @UseGuards(RoleGuard)
+  @UseGuards(AuthGuard, RoleGuard)
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number) {
     return this.materialListService.delete(id);

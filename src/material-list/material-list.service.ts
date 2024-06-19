@@ -109,6 +109,8 @@ export class MaterialListService {
       throw new NotFoundException(`Material list with ID ${id} not found`);
     }
 
+    await this.materiaListItemService.deleteByMaterialList(materialList);
+
     await this.materialListRepository.remove(materialList);
   }
 

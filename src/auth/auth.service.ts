@@ -35,6 +35,7 @@ export class AuthService {
           id: user.id,
           name: user.name,
           email: user.email,
+          type: user.type,
         },
         {
           expiresIn: '3d',

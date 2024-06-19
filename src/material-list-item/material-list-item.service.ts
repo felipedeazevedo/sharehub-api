@@ -16,10 +16,12 @@ export class MaterialListItemService {
     materialListItemRequestDTO: MaterialListItemRequestDTO,
     materialList: MaterialListEntity,
   ) {
+    console.log(materialListItemRequestDTO);
     const materialListItem = new MaterialListItemEntity();
     materialListItem.name = materialListItemRequestDTO.name;
     materialListItem.description = materialListItemRequestDTO.description;
-    materialListItem.mandatory = Boolean(materialListItemRequestDTO.mandatory);
+    console.log(Boolean(materialListItemRequestDTO.mandatory));
+    materialListItem.mandatory = materialListItemRequestDTO.mandatory;
     materialListItem.materialList = materialList;
 
     await this.materialListItemRepository.save(materialListItem);
