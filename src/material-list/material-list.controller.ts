@@ -45,6 +45,13 @@ export class MaterialListController {
     return this.materialListService.findOne(id);
   }
 
+  @Roles(Role.TEACHER)
+  @UseGuards(AuthGuard, RoleGuard)
+  @Get('/user/:id')
+  findAllByUserId(@Param('id', ParseIntPipe) id: number) {
+    return this.materialListService.findListsByUserId(id);
+  }
+
   @Get()
   findAll() {
     return this.materialListService.findAll();

@@ -1,9 +1,9 @@
 import {
-  BadRequestException,
-  HttpStatus,
+  BadRequestException, forwardRef,
+  HttpStatus, Inject,
   Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+  UnauthorizedException
+} from "@nestjs/common";
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { AuthRegisterDTO } from './dto/auth-register.dto';
@@ -22,6 +22,7 @@ export class AuthService {
 
   constructor(
     private readonly jwtService: JwtService,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     @InjectRepository(UserEntity)
     private readonly userRepository: UserRepository,

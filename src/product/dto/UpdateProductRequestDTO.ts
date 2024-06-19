@@ -13,10 +13,10 @@ export class UpdateProductRequestDTO {
   @IsString()
   @IsOptional()
   @Matches(/^[\p{L}0-9\s]+$/u, {
-    message: 'Title must only contain alphanumeric characters and spaces',
+    message: 'Título deve conter somente caracteres alfanuméricos e espaços',
   })
   @MaxLength(100, {
-    message: 'Title must have less than 100 characters long',
+    message: 'Título deve ter menos de 100 caracteres',
   })
   title: string;
 
@@ -24,13 +24,13 @@ export class UpdateProductRequestDTO {
   @IsOptional()
   @IsAlphanumeric()
   @MaxLength(250, {
-    message: 'Description must have less than 250 characters long',
+    message: 'Descrição deve ter menos de 250 caracteres',
   })
   description: string;
 
   @IsString()
   @Matches(/^\d{1,3}(\.\d{3})*,\d{2}$/, {
-    message: 'Price must be in pt-BR format - 0000.000,00',
+    message: 'Preço deve estar no formato pt-BR - 0000.000,00',
   })
   @IsOptional()
   price: string;

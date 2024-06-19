@@ -12,12 +12,15 @@ import { Role } from '../../enums/role.enums';
 export class AuthRegisterDTO {
   @IsString()
   @MaxLength(60)
+  @Matches(/^[\p{L}0-9\s]+$/u, {
+    message: 'Nome deve conter somente caracteres alfanuméricos e espaços',
+  })
   name: string;
 
   @IsString()
   @MaxLength(11)
   @Matches(/^[Uu][Cc]\d{8}$/, {
-    message: 'Formato de matrícula inválido. Deve ser UC seguido de 8 dígitos.',
+    message: 'Formato de matrícula inválido. Deve ser UC seguido de 8 números',
   })
   registration: string;
 
@@ -39,6 +42,6 @@ export class AuthRegisterDTO {
 
   @IsString()
   @IsPhoneNumber('BR')
-  @MaxLength(20)
+  @MaxLength(11)
   phone: string;
 }

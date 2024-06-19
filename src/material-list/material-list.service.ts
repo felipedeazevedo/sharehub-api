@@ -1,14 +1,11 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { CreateMaterialListRequestDTO } from './dto/CreateMaterialListRequestDTO';
-import { MaterialListRepository } from './material-list.repository';
-import { UpdateMaterialListRequestDTO } from './dto/UpdateMaterialListRequestDTO';
-import { InjectRepository } from '@nestjs/typeorm';
-import { MaterialListItemService } from '../material-list-item/material-list-item.service';
-import { UserService } from '../user/user.service';
-import { MaterialListEntity } from './entity/material-list.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { CreateMaterialListRequestDTO } from "./dto/CreateMaterialListRequestDTO";
+import { MaterialListRepository } from "./material-list.repository";
+import { UpdateMaterialListRequestDTO } from "./dto/UpdateMaterialListRequestDTO";
+import { InjectRepository } from "@nestjs/typeorm";
+import { MaterialListItemService } from "../material-list-item/material-list-item.service";
+import { UserService } from "../user/user.service";
+import { MaterialListEntity } from "./entity/material-list.entity";
 
 @Injectable()
 export class MaterialListService {
@@ -59,6 +56,13 @@ export class MaterialListService {
 
   async findAll(): Promise<MaterialListEntity[]> {
     return await this.materialListRepository.find();
+  }
+
+  async findListsByUserId(userId: number): Promise<MaterialListEntity[]> {
+    return await this.materialListRepository.find({
+      where: { teacher: { id: userId } },
+      relations: ['items', 'teacher'],
+    });
   }
 
   async update(

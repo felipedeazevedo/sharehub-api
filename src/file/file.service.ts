@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
+  DeleteObjectCommand,
   GetObjectCommand,
   GetObjectCommandOutput,
   HeadObjectCommand,
@@ -22,11 +23,12 @@ export class FileService {
 
   async upload(pictures: Express.Multer.File[], postId: number) {
     try {
+      await this.deleteImagesByPostId(postId);
       for (const picture of pictures) {
         await this.s3Client.send(
           new PutObjectCommand({
             Bucket: 'sharehub-bucket-sa',
-            Key: picture.originalname,
+            Key: 'post-' + postId.toString() + '-' + picture.originalname,
             Body: picture.buffer,
             Metadata: {
               postId: postId.toString(),
@@ -92,4 +94,41 @@ export class FileService {
       stream.on('error', reject);
     });
   }
+
+  async deleteImagesByPostId(postId: number) {
+    try {
+      const listObjectsCommand = new ListObjectsV2Command({
+        Bucket: 'sharehub-bucket-sa',
+      });
+      const listObjectsResponse: ListObjectsV2CommandOutput =
+        await this.s3Client.send(listObjectsCommand);
+
+      if (!listObjectsResponse.Contents) {
+        return;
+      }
+
+      for (const object of listObjectsResponse.Contents) {
+        const headObjectCommand = new HeadObjectCommand({
+          Bucket: 'sharehub-bucket-sa',
+          Key: object.Key!,
+        });
+        const headObjectResponse: HeadObjectCommandOutput =
+          await this.s3Client.send(headObjectCommand);
+
+        if (
+          headObjectResponse.Metadata &&
+          headObjectResponse.Metadata.postid === postId.toString()
+        ) {
+          const deleteObjectCommand = new DeleteObjectCommand({
+            Bucket: 'sharehub-bucket-sa',
+            Key: object.Key!,
+          });
+          await this.s3Client.send(deleteObjectCommand);
+        }
+      }
+    } catch (e) {
+      throw new BadRequestException('Erro ao deletar imagens: ', e);
+    }
+  }
+
 }

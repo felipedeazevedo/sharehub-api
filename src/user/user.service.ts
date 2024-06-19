@@ -1,9 +1,9 @@
 import {
-  ConflictException,
+  ConflictException, forwardRef, Inject,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+  NotFoundException
+} from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,12 +11,15 @@ import { UserEntity } from './entity/user.entity';
 import { UpdateUserRequestDTO } from './dto/UpdateUserRequestDTO';
 import { UserResponseDTO } from './dto/UserResponseDTO';
 import { AuthRegisterDTO } from '../auth/dto/auth-register.dto';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: UserRepository,
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
   ) {}
 
   async create(user: AuthRegisterDTO) {
@@ -31,10 +34,7 @@ export class UserService {
         );
       }
 
-      user.password = await bcrypt.hash(
-        user.password,
-        await bcrypt.genSalt(),
-      );
+      user.password = await bcrypt.hash(user.password, await bcrypt.genSalt());
 
       const newUser: UserEntity = this.userRepository.create({
         name: user.name,
@@ -82,7 +82,7 @@ export class UserService {
       updatedAt: new Date(),
     });
 
-    return this.findOne(id);
+    return this.authService.createToken(await this.findOne(id));
   }
 
   async delete(id: number) {

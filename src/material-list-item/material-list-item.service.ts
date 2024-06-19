@@ -16,11 +16,9 @@ export class MaterialListItemService {
     materialListItemRequestDTO: MaterialListItemRequestDTO,
     materialList: MaterialListEntity,
   ) {
-    console.log(materialListItemRequestDTO);
     const materialListItem = new MaterialListItemEntity();
     materialListItem.name = materialListItemRequestDTO.name;
     materialListItem.description = materialListItemRequestDTO.description;
-    console.log(Boolean(materialListItemRequestDTO.mandatory));
     materialListItem.mandatory = materialListItemRequestDTO.mandatory;
     materialListItem.materialList = materialList;
 
