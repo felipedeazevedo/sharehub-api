@@ -63,6 +63,13 @@ export class PostController {
 
   @Roles(Role.STUDENT)
   @UseGuards(AuthGuard, RoleGuard)
+  @Get('/user/:id')
+  findAllByUserId(@Param('id', ParseIntPipe) id: number) {
+    return this.postService.findPostsByUserId(id);
+  }
+
+  @Roles(Role.STUDENT)
+  @UseGuards(AuthGuard, RoleGuard)
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number) {
     return this.postService.delete(id);
@@ -78,7 +85,7 @@ export class PostController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: 1024 * 1024 }),
-          new FileTypeValidator({ fileType: 'image/png' }),
+          new FileTypeValidator({ fileType: '.(jpeg|jpg|png)' }),
         ],
       }),
     )

@@ -47,5 +47,3 @@ CREATE TABLE material_lists_itens (
     material_list_id INT NOT NULL,
     FOREIGN KEY (material_list_id) REFERENCES material_lists(id)
 );
-
-

@@ -23,7 +23,7 @@ import { MaterialListItemModule } from './material-list-item/material-list-item.
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
-        limit: 100,
+        limit: 1000,
       },
     ]),
     forwardRef(() => UserModule),

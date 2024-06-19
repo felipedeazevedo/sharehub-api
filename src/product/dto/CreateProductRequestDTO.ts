@@ -10,7 +10,9 @@ import { ProductCondition } from '../../enums/productCondition.enum';
 
 export class CreateProductRequestDTO {
   @IsString()
-  @IsAlphanumeric()
+  @Matches(/^[\p{L}0-9\s]+$/u, {
+    message: 'Title must only contain alphanumeric characters and spaces',
+  })
   @MaxLength(100, {
     message: 'Title must have less than 100 characters long',
   })

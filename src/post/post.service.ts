@@ -56,6 +56,15 @@ export class PostService {
     );
   }
 
+  async findPostsByUserId(userId: number): Promise<PostResponseDTO[]> {
+    const posts: PostEntity[] = await this.postRepository.find({
+      where: { user: { id: userId } },
+      relations: ['product', 'user'],
+    });
+
+    return posts.map((post) => this.mapToDTO(post));
+  }
+
   async findAll() {
     const posts: PostEntity[] = await this.postRepository.find({
       relations: ['product', 'user'],
@@ -84,7 +93,6 @@ export class PostService {
 
   async delete(id: number) {
     await this.exists(id);
-
     return this.postRepository.delete(id);
   }
 
