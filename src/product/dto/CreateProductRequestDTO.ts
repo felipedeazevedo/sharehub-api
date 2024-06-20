@@ -16,16 +16,12 @@ export class CreateProductRequestDTO {
   title: string;
 
   @IsString()
-  @IsAlphanumeric()
   @MaxLength(250, {
     message: 'Descrição deve ter menos de 250 caracteres',
   })
   description: string;
 
   @IsString()
-  @Matches(/^\d{1,3}(\.\d{3})*,\d{2}$/, {
-    message: 'Preço deve estar no formato pt-BR - 0000.000,00',
-  })
   price: string;
 
   @IsEnum(ProductCategory)

@@ -43,7 +43,6 @@ export class ProductService {
   }
 
   convertToDecimalPoint(brNumber: string): number {
-    const normalizedNumber = brNumber.replace(/\./g, '').replace(',', '.');
-    return parseFloat(normalizedNumber);
+    return parseFloat(brNumber);
   }
 }
