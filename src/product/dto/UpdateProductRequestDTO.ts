@@ -12,9 +12,6 @@ import { ProductCondition } from '../../enums/productCondition.enum';
 export class UpdateProductRequestDTO {
   @IsString()
   @IsOptional()
-  @Matches(/^[\p{L}0-9\s]+$/u, {
-    message: 'Título deve conter somente caracteres alfanuméricos e espaços',
-  })
   @MaxLength(100, {
     message: 'Título deve ter menos de 100 caracteres',
   })
